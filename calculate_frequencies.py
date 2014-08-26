@@ -235,7 +235,7 @@ def insert_all_relative_frequencies():
         for d in diseases:
             f=calculate_all_frequencies(n,'disease',d)
             cfreq.insert(f)
-            print('Completed for the group '+repr(d)+' n='+repr(n))
+            print('Completed for the disease '+repr(d)+' n='+repr(n))
 
 
 
