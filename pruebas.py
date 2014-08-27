@@ -14,7 +14,7 @@ import calculate_specific_ngrams as spn
 #f=cf.calculate_all_frequencies(2,'group','Blood')
 #print f
 
-f=spn.calculate_frequency('group','Blood',1)
+f=spn.insert_all_characteristic_ngrams()
 print f
 
 

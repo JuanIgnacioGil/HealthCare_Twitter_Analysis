@@ -21,7 +21,7 @@ import scipy.stats as st
 ###########################################################################################
 
 #Calculate specific ngrams
-def calculate_frequency(level,field,n):
+def calculate_characteristic_ngrams(level,field,n):
 
     #Find the ngrams for this {level:field} ordered by frequency
     
@@ -58,10 +58,43 @@ def calculate_frequency(level,field,n):
         chi=st.chisquare(fd,ft)
 
         if chi[1]<0.05:
-            t=' '.join(ngram['text'])
-            charngrams.append({'text':t,'frequency':ngram['frequency']})
+            charngrams.append({'text':ngram['text'],'frequency':ngram['frequency']})
 
         if len(charngrams)==100:
             break
 
-    return charngrams
+    result={}
+    result['ngrams']=charngrams
+    result[level]=field
+    result['n']=n
+    return result
+
+######################################################################################
+
+#Insert in the database all charasteristic ngrams for each group and disease
+
+def insert_all_characteristic_ngrams():
+    
+    client = MongoClient()
+    db = client['HealthCare_Twitter_Analysis']
+    ctw = db.tweets
+    cchar= db.charngrams
+    cchar.drop()
+    
+    #List of groups
+    groups=db.tweets.distinct('group')
+    diseases=db.tweets.distinct('disease')
+    
+    for n in range(1,5):
+        
+        #Insert the relative frequencies for each group
+        for g in groups:
+            f=calculate_characteristic_ngrams('group',g,n)
+            cchar.insert(f)
+            print('Completed for the group '+repr(g)+' n='+repr(n))
+        
+        #Insert the relative frequencies for each disease
+        for d in diseases:
+            f=calculate_characteristic_ngrams('disease',d,n)
+            cchar.insert(f)
+            print('Completed for the disease '+repr(d)+' n='+repr(n))
