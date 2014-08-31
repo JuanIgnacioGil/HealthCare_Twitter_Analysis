@@ -28,6 +28,7 @@ def calculate_characteristic_ngrams(level,field,n):
     client = MongoClient()
     db = client['HealthCare_Twitter_Analysis']
     col = db.frequencies
+    ngtemp=db.ngtemp()
 
     #Defining the pipeline
     pipeline=[\
@@ -36,17 +37,18 @@ def calculate_characteristic_ngrams(level,field,n):
               {'$project':{'_id':0,'text':'$_id.text',\
               'frequency':1,\
               'lambda':{'$divide': [ 1,'$relative frequency'] }}},\
-              { '$sort' : { 'lambda' : 1} }
+              { '$sort' : { 'lambda' : 1}},\
+              {'$out':'ngtemp'}
           ]
 
 
-    f=col.aggregate(pipeline, allowDiskUse=True)
+    col.aggregate(pipeline, allowDiskUse=True)
 
     #For each n-gram, search for the total frequency, and if the difference is significative,
     #add it to the solution
     charngrams=[]
 
-    for ngram in f['result']:
+    for ngram in ngtemp.find():
         g=col.find({ '_id' : { 'text' : ngram['text'], 'all' : 'True' } })
 
         #Frequencies in the disease
@@ -67,6 +69,7 @@ def calculate_characteristic_ngrams(level,field,n):
     result['ngrams']=charngrams
     result[level]=field
     result['n']=n
+    ngtemp.drop()
     return result
 
 ######################################################################################
