@@ -28,7 +28,7 @@ def calculate_characteristic_ngrams(level,field,n):
     client = MongoClient()
     db = client['HealthCare_Twitter_Analysis']
     col = db.frequencies
-    ngtemp=db.ngtemp()
+    ngtemp=db.ngtemp
 
     #Defining the pipeline
     pipeline=[\
