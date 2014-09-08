@@ -1,6 +1,7 @@
 import calculate_frequencies as cf
 import add_ngrams_mongo as addng
 import calculate_specific_ngrams as spn
+import add_disease_group_fields as adg
 
 #import time
 
@@ -14,8 +15,8 @@ import calculate_specific_ngrams as spn
 #f=cf.calculate_all_frequencies(2,'group','Blood')
 #print f
 
-f=spn.insert_all_characteristic_ngrams()
-print f
+l=adg.create_list_of_diseases_and_groups('/Users/cato/programacion/HealthCare_Twitter_Analysis/Twitter Data/Jan to May')
+print l
 
 
 
