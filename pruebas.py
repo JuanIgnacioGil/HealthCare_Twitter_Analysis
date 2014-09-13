@@ -15,8 +15,8 @@ import add_disease_group_fields as adg
 #f=cf.calculate_all_frequencies(2,'group','Blood')
 #print f
 
-l=adg.create_list_of_diseases_and_groups('/Users/cato/programacion/HealthCare_Twitter_Analysis/Twitter Data/Jan to May')
-print l
+#l=adg.create_list_of_diseases_and_groups('/Users/cato/programacion/HealthCare_Twitter_Analysis/Twitter Data/Jan to May')
+#print l
 
 
-
+adg.update_all_tweets_in_database()

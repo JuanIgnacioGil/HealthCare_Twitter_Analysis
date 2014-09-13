@@ -45,7 +45,7 @@ def find_disease_group(tweet):
     
     client = MongoClient()
     db = client['tweets']
-    col = db.sample
+    col = db.geo
     
     hashtags=[h['text'].lower() for h in tweet['entities']['hashtags']]
     
@@ -64,6 +64,30 @@ def find_disease_group(tweet):
 ###########################################################################################
 
 
-
-
+def update_all_tweets_in_database():
+    
+    """
+        Go through the tweets in the database
+        """
+    
+    #Database
+    client = MongoClient()
+    db = client['tweets']
+    col = db.geo
+    
+    docs=col.find().batch_size(50)
+    #docs=col.find().batch_size(50)
+    total=docs.count()
+    print repr(total)+' documents to include group and disease'
+    nt=0
+    
+    #Iterate over all elements in the collection without n-grams field
+    for tweet in docs:
+        dg=find_disease_group(tweet)
+        col.update({'_id':tweet['_id']}, {'$set': {'group':dg[0],'disease':dg[1]}}, upsert=False)
+        nt+=1
+        
+        #Just for let you know that it's working
+        if nt%1000==0:
+            print tweet['text']+' ... '+repr(nt*100/total)+'% done...'
 
