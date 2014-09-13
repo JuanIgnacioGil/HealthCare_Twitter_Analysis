@@ -75,7 +75,7 @@ def update_all_tweets_in_database():
     db = client['tweets']
     col = db.geo
     
-    docs=col.find().batch_size(50)
+    docs=col.find({ 'disease' : { '$exists' : 'false' } } ).batch_size(50)
     #docs=col.find().batch_size(50)
     total=docs.count()
     print repr(total)+' documents to include group and disease'
@@ -88,6 +88,5 @@ def update_all_tweets_in_database():
         nt+=1
         
         #Just for let you know that it's working
-        if nt%1000==0:
+        if nt%10000==0:
             print tweet['text']+' ... '+repr(nt*100/total)+'% done...'
-
